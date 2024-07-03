@@ -1,16 +1,22 @@
 require('dotenv').config();
+const { askQuestions } = require('./queries/inquirer');
 const { Pool } = require('pg');
 
-const PORT = process.env.PORT || 3001;
+// const PORT = process.env.PORT || 3001;
 
 const pool = new Pool(
-    process.env.DB_NAME,
-    process.env.DB_USER,
-    process.env.DB_PASSWORD,
     {
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
         host: 'localhost',
-        dialect: 'postgres'
+        database: process.env.DB_NAME
     }
 );
 
 pool.connect();
+
+function init() {
+    askQuestions();
+}
+
+init();
