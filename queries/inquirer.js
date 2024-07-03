@@ -13,6 +13,11 @@ const questions = [
     }
 ]
 
+//WHEN I choose to view all departments
+//THEN I am presented with a formatted table showing department names and 
+//department ids
+
+
 function askQuestions() {
     inquirer.prompt(questions)
     .then(data => {
