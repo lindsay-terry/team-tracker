@@ -1,4 +1,5 @@
 const inquirer = require('inquirer');
+const { viewDepartment } = require('./queries');
 
 //THEN I am presented with the following options: view all departments, 
 //view all roles, view all employees, add a department, add a role, add 
@@ -20,9 +21,11 @@ const questions = [
 
 function askQuestions() {
     inquirer.prompt(questions)
-    .then(data => {
-        console.log(data);
-    })
+    .then(answers => {
+        if (answers.options === 'View All Departments') {
+            viewDepartment();
+        }
+    });
 }
 
 module.exports = { askQuestions };
