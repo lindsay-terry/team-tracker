@@ -43,6 +43,16 @@ const viewEmployees = () => {
     })
 }
 
+const addDept = (addDept) => {
+    pool.query(`INSERT INTO departments (name) VALUES ('${addDept}')`, (error, results) => {
+        if (error) {
+            console.error('Error executing query', error);
+            return;
+        }
+        console.log('Department added successfully!');
+    })
+}
 
 
-module.exports = { viewDepartment, viewRoles, viewEmployees };
+
+module.exports = { viewDepartment, viewRoles, viewEmployees, addDept };
