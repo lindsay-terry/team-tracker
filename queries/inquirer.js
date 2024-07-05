@@ -1,6 +1,6 @@
 const inquirer = require('inquirer');
-const { viewDepartment, viewRoles, viewEmployees, addDept , createRole} = require('./queries');
-const { readDepartments } = require('./helpers');
+const { viewDepartment, viewRoles, viewEmployees, addDept , createRole, newEmployee} = require('./queries');
+const { readDepartments, readEmployees } = require('./helpers');
 
 //THEN I am presented with the following options: view all departments, 
 //view all roles, view all employees, add a department, add a role, add 
@@ -42,6 +42,31 @@ const addRole = [
     }
 ]
 
+const addEmployee = [
+    {
+        type: 'input',
+        name: 'firstName',
+        message: "Enter employee's first name:",
+    },
+    {
+        type: 'input',
+        name: 'lastName',
+        message: "Enter employee's last name:",
+    },
+    {
+        type: 'list',
+        name: 'empRole',
+        message: "What is the employee's role?",
+        choices: [],
+    },
+    {
+        type: 'list',
+        name: 'empManager',
+        message: "Who is the employee's manager?",
+        choices: [],
+    }
+]
+
 // WHEN I choose to view all employees
 // THEN I am presented with a formatted table showing employee data, including employee 
 //ids, first names, last names, job titles, departments, salaries, and managers that the 
@@ -73,7 +98,9 @@ function askQuestions() {
                 })
                 break;
             case 'Add A Role':
+                //helper function to collect current list of departments
                 readDepartments()
+                //use result of function as the choices for list prompt
                 .then(departmentNames =>{
                     addRole[2].choices = departmentNames;
                     inquirer.prompt(addRole)
@@ -82,6 +109,11 @@ function askQuestions() {
                     });
                 });
                 break;
+            case 'Add An Employee':
+                //helper function to collect current list of employees
+                readEmployees();
+
+
         }
     });
 }

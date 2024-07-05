@@ -74,6 +74,10 @@ const createRole = (answers) => {
 
 }
 
+const newEmployee = () => {
+    
+}
 
 
-module.exports = { viewDepartment, viewRoles, viewEmployees, addDept, createRole };
+
+module.exports = { viewDepartment, viewRoles, viewEmployees, addDept, createRole, newEmployee };

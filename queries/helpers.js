@@ -1,6 +1,7 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
+// new instance of pool to connect to database for helper functions
 const pool = new Pool(
     {
         user: process.env.DB_USER,
@@ -11,8 +12,9 @@ const pool = new Pool(
 );
 
 
-
+//helper function to collect current list of departments
 const readDepartments = () => {
+    //get a result from the function to use in inquirer question
     return new Promise((resolve, reject) => {
         pool.query('SELECT * from departments', (error, result) => {
             const departmentList = result.rows;
@@ -23,4 +25,15 @@ const readDepartments = () => {
     })
 }
 
-module.exports = { readDepartments };
+//helper function to collect current list of employees
+const readEmployees = () => {
+    //get a result from the function to use in inquirer question
+    return new Promise((resolve, reject) => {
+        pool.query('SELECT * from employees', (error, result) => {
+            const employeeList = result.rows;
+            const employeeNames = employeeList.map(({ first_name, last_name }) => `${first_name} ${last_name}`);
+            resolve(employeeNames);
+        })
+    })
+}
+module.exports = { readDepartments, readEmployees };
