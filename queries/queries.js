@@ -34,7 +34,7 @@ const viewRoles = () => {
 }
 
 const viewEmployees = () => {
-    pool.query('SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, r.salary FROM employees e JOIN roles r ON r.id = e.role_id JOIN departments d ON r.department_id = d.id JOIN employees m ON e.manager_id = m.id', (error, results) => {
+    pool.query(`SELECT e.id, e.first_name, e.last_name, r.title AS role, CONCAT(m.first_name, ' ', m.last_name) AS manager FROM employees e JOIN roles r ON e.role_id = r.id LEFT JOIN employees m ON e.manager_id = m.id;`, (error, results) => {
         if (error) {
             console.error('Error executing query', error);
             return;
@@ -74,10 +74,28 @@ const createRole = (answers) => {
 
 }
 
-const newEmployee = () => {
-    
+const createEmployee = async (answers) => {
+    const { firstName, lastName, empRole, empManager } = answers;
+
+    try {
+        const roleQuery = await pool.query(`SELECT id FROM roles WHERE title = '${empRole}'`);
+        const roleId = roleQuery.rows[0].id;
+
+        if (empManager === 'None') {
+            await pool.query(`INSERT INTO employees (first_name, last_name, role_id) VALUES ('${firstName}', '${lastName}', '${roleId}')`);
+            console.log('Employee added successfully!');
+        } else {
+            const managerQuery = await pool.query(`SELECT id FROM employees WHERE CONCAT(first_name,' ', last_name) = '${empManager}'`);
+            const managerId = managerQuery.rows[0].id;
+
+            await pool.query(`INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ('${firstName}', '${lastName}', '${roleId}', '${managerId}')`);
+            console.log('Employee added successfully!');
+        }
+     } catch (error) {
+        console.error('Error:', error);
+     }
 }
+            
 
 
-
-module.exports = { viewDepartment, viewRoles, viewEmployees, addDept, createRole, newEmployee };
+module.exports = { viewDepartment, viewRoles, viewEmployees, addDept, createRole, createEmployee };

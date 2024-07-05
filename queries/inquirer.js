@@ -1,6 +1,6 @@
 const inquirer = require('inquirer');
-const { viewDepartment, viewRoles, viewEmployees, addDept , createRole, newEmployee} = require('./queries');
-const { readDepartments, readEmployees } = require('./helpers');
+const { viewDepartment, viewRoles, viewEmployees, addDept , createRole, createEmployee} = require('./queries');
+const { readDepartments, readRoles, readEmployees } = require('./helpers');
 
 //THEN I am presented with the following options: view all departments, 
 //view all roles, view all employees, add a department, add a role, add 
@@ -111,7 +111,19 @@ function askQuestions() {
                 break;
             case 'Add An Employee':
                 //helper function to collect current list of employees
-                readEmployees();
+                readRoles()
+                .then(roleNames => {
+                    addEmployee[2].choices = roleNames;
+                })
+                readEmployees()
+                .then(employeeNames => {
+                    employeeNames.unshift('None');
+                    addEmployee[3].choices = employeeNames;
+                })
+                inquirer.prompt(addEmployee)
+                .then(answers => {
+                    createEmployee(answers);
+                })
 
 
         }

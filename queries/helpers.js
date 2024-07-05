@@ -25,6 +25,16 @@ const readDepartments = () => {
     })
 }
 
+const readRoles = () => {
+    return new Promise((resolve, reject) => {
+        pool.query('SELECT * FROM roles', (error, result) => {
+            const roleList = result.rows;
+            const roleNames = roleList.map(({ title }) => title);
+            resolve(roleNames);
+        })
+    })
+}
+
 //helper function to collect current list of employees
 const readEmployees = () => {
     //get a result from the function to use in inquirer question
@@ -36,4 +46,4 @@ const readEmployees = () => {
         })
     })
 }
-module.exports = { readDepartments, readEmployees };
+module.exports = { readDepartments, readRoles, readEmployees };
