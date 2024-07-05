@@ -24,7 +24,7 @@ const viewDepartment = () => {
 };
 
 const viewRoles = () => {
-    pool.query('SELECT * FROM roles', (error, results) => {
+    pool.query('SELECT roles.id, roles.title, departments.name as department, roles.salary FROM roles JOIN departments ON roles.department_id = departments.id', (error, results) => {
         if (error) {
             console.error('Error executing query', error);
             return;
