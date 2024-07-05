@@ -36,17 +36,22 @@ const addDepartment = [
 function askQuestions() {
     inquirer.prompt(questions)
     .then(answers => {
-        if (answers.options === 'View All Departments') {
-            viewDepartment();
-        } else if (answers.options === 'View All Roles') {
-            viewRoles();
-        } else if (answers.options === 'View All Employees') {
-            viewEmployees();
-        } else if (answers.options === 'Add A Department') {
-            inquirer.prompt(addDepartment)
-            .then(answers => {
-                addDept(answers.addDept);
-            })
+        switch (answers.options) {
+            case 'View All Departments':
+                viewDepartment();
+                break;
+            case 'View All Roles':
+                viewRoles();
+                break;
+            case 'View All Employees':
+                viewEmployees();
+                break;
+            case 'Add A Department':
+                inquirer.prompt(addDepartment) 
+                .then(answers => {
+                    addDept(answers.addDept);
+                })
+                break;
         }
     });
 }
