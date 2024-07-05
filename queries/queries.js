@@ -53,6 +53,27 @@ const addDept = (addDept) => {
     })
 }
 
+const createRole = (answers) => {
+    const { roleTitle, roleSalary, roleDept } = answers;
+
+    pool.query(`SELECT id FROM departments WHERE name = '${roleDept}'`, (error, results) => {
+        if (error) {
+            console.error('Error retrieving department id', error);
+            return;
+        }
+        const departmentId = results.rows[0].id;
+
+        pool.query(`INSERT INTO roles (title, salary, department_id) VALUES ('${roleTitle}', '${roleSalary}', '${departmentId}')`, (error, results) => {
+            if (error) {
+                console.error('Error executing query', error);
+                return;
+            }
+            console.log('Role added successfully!');
+        })
+    })
+
+}
 
 
-module.exports = { viewDepartment, viewRoles, viewEmployees, addDept };
+
+module.exports = { viewDepartment, viewRoles, viewEmployees, addDept, createRole };
