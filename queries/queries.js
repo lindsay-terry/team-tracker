@@ -33,6 +33,16 @@ const viewRoles = () => {
     })
 }
 
+const viewEmployees = () => {
+    pool.query('SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, r.salary FROM employees e JOIN roles r ON r.id = e.role_id JOIN departments d ON r.department_id = d.id JOIN employees m ON e.manager_id = m.id', (error, results) => {
+        if (error) {
+            console.error('Error executing query', error);
+            return;
+        }
+        console.table(results.rows);
+    })
+}
 
 
-module.exports = { viewDepartment, viewRoles };
+
+module.exports = { viewDepartment, viewRoles, viewEmployees };
