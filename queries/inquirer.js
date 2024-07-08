@@ -1,11 +1,8 @@
 const inquirer = require('inquirer');
-const { viewDepartment, viewRoles, viewEmployees, addDept , createRole, createEmployee} = require('./queries');
+const { viewDepartment, viewRoles, viewEmployees, addDept , createRole, createEmployee, updateEmployeeRole } = require('./queries');
 const { readDepartments, readRoles, readEmployees } = require('./helpers');
 
-//THEN I am presented with the following options: view all departments, 
-//view all roles, view all employees, add a department, add a role, add 
-//an employee, and update an employee role
-
+//All the questions based on starting app and user selection
 const questions = [
     {
         type: 'list',
@@ -67,33 +64,42 @@ const addEmployee = [
     }
 ]
 
-// WHEN I choose to view all employees
-// THEN I am presented with a formatted table showing employee data, including employee 
-//ids, first names, last names, job titles, departments, salaries, and managers that the 
-//employees report to
+const updateRole = [
+    {
+        type: 'list',
+        name: 'chooseEmp',
+        message: 'Which employee would you like to update?',
+        choices: [],
+    },
+    {
+        type: 'list',
+        name: 'chooseRole',
+        message: 'What role would you like to assign to the selected employee?',
+        choices: [],
+    }
+]
 
-// WHEN I choose to add a department
-// THEN I am prompted to enter the name of the department and that department is 
-//added to the database
-
-
-
+//Asks the questions and handles each response
 function askQuestions() {
     inquirer.prompt(questions)
     .then(answers => {
         switch (answers.options) {
             case 'View All Departments':
+                //query function to view all departments
                 viewDepartment();
                 break;
             case 'View All Roles':
+                //query function to view all roles
                 viewRoles();
                 break;
             case 'View All Employees':
+                //query function to view all employees
                 viewEmployees();
                 break;
             case 'Add A Department':
                 inquirer.prompt(addDepartment) 
                 .then(answers => {
+                    //query function 
                     addDept(answers.addDept);
                 })
                 break;
@@ -124,6 +130,23 @@ function askQuestions() {
                 .then(answers => {
                     createEmployee(answers);
                 })
+                break;
+            case 'Update An Employee Role':
+                //get list of employees for choices on who to update
+                readEmployees()
+                .then(employeeNames => {
+                    updateRole[0].choices = employeeNames;
+                    //get list of roles for choices on roles to update
+                    readRoles()
+                    .then(roleNames => {
+                        updateRole[1].choices = roleNames;
+                        inquirer.prompt(updateRole)
+                        .then(answers => {
+                            updateEmployeeRole(answers);
+                        })
+                    })
+                }) 
+                break;
 
 
         }

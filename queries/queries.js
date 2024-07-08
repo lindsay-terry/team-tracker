@@ -95,7 +95,26 @@ const createEmployee = async (answers) => {
         console.error('Error:', error);
      }
 }
+
+const updateEmployeeRole = (answers) => {
+    const { chooseEmp, chooseRole } = answers;
+
+        //Finds roleID of chosen role
+        pool.query(`SELECT id FROM roles WHERE title = '${chooseRole}'`, (error, results) => {
+            if (error) {
+                console.error('Error:', error);
+                return;
+            }
+            const roleId = results.rows[0].id;
+
+            //Updates roleId by name of employee chosen
+            pool.query(`UPDATE employees SET role_id = '${roleId}' WHERE CONCAT(first_name,' ', last_name) = '${chooseEmp}'`);
+            console.log('Employee role updated successfully!');
+            
+        });
+   
+}
             
 
 
-module.exports = { viewDepartment, viewRoles, viewEmployees, addDept, createRole, createEmployee };
+module.exports = { viewDepartment, viewRoles, viewEmployees, addDept, createRole, createEmployee, updateEmployeeRole };
