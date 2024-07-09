@@ -111,92 +111,71 @@ function handleChoice(answer) {
         case 'View All Departments':
             viewDepartment().then(displayMenu);
         break;
+
+        case 'View All Roles':
+            viewRoles().then(displayMenu);
+        break;
+
+        case 'View All Employees':
+            viewEmployees().then(displayMenu);
+        break;
+
+        case 'Add A Department':
+            inquirer.prompt(addDepartment)
+            .then(answers => {
+                addDept(answers.addDept).then(displayMenu);
+            })
+        break;
+
+        case 'Add A Role':
+            //helper function to collect current list of departments
+            readDepartments()
+            .then(departmentNames => {
+                addRole[2].choices = departmentNames;
+                inquirer.prompt(addRole)
+                .then(answers => {
+                    createRole(answers).then(displayMenu);
+                });
+            });
+        break;
+
+        case 'Add An Employee':
+            //helper functions to collect current list of employees and roles
+            readRoles().then(roleNames => {
+                addEmployee[2].choices = roleNames;
+            })
+            readEmployees().then(employeeNames => {
+                employeeNames.unshift('None');
+                addEmployee[3].choices = employeeNames;
+            })
+            inquirer.prompt(addEmployee).then(answers => {
+                createEmployee(answers).then(displayMenu);
+            })
+        break;
+
+        case 'Update An Employee Role':
+            //get list of employees for choices on who to update
+            readEmployees().then(employeeNames => {
+                updateRole[0].choices = employeeNames;
+                //get list of roles for choices on roles to select
+                readRoles().then(roleNames => {
+                    updateRole[1].choices = roleNames;
+                    inquirer.prompt(updateRole).then(answers => {
+                        updateEmployeeRole(answers).then(displayMenu);
+                    })
+                })
+            })
+        break;
+
+        case 'Cancel':
+            //clears console and exits application
+            console.clear();
+            process.exit();
+        break;
+
+            
     }
 
 }
-
-// function mainMenu() {
-//     setTimeout(() => {
-//         askQuestions();
-//     }, 1000);
-//     };
-
-// function askQuestions() {
-//     inquirer.prompt(questions)
-//     .then(answers => {
-//         switch (answers.options) {
-//             case 'View All Departments':
-//                 //query function to view all departments
-//                 viewDepartment()
-//                 break;
-//             case 'View All Roles':
-//                 //query function to view all roles
-//                 viewRoles();
-//                 break;
-//             case 'View All Employees':
-//                 //query function to view all employees
-//                 viewEmployees();
-//                 break;
-//             case 'Add A Department':
-//                 inquirer.prompt(addDepartment) 
-//                 .then(answers => {
-//                     //query function 
-//                     addDept(answers.addDept);
-//                 })
-//                 break;
-//             case 'Add A Role':
-//                 //helper function to collect current list of departments
-//                 readDepartments()
-//                 //use result of function as the choices for list prompt
-//                 .then(departmentNames =>{
-//                     addRole[2].choices = departmentNames;
-//                     inquirer.prompt(addRole)
-//                     .then(answers => {
-//                         createRole(answers);
-//                     });
-//                 });
-//                 break;
-//             case 'Add An Employee':
-//                 //helper function to collect current list of employees
-//                 readRoles()
-//                 .then(roleNames => {
-//                     addEmployee[2].choices = roleNames;
-//                 })
-//                 readEmployees()
-//                 .then(employeeNames => {
-//                     employeeNames.unshift('None');
-//                     addEmployee[3].choices = employeeNames;
-//                 })
-//                 inquirer.prompt(addEmployee)
-//                 .then(answers => {
-//                     createEmployee(answers);
-//                 })
-//                 break;
-//             case 'Update An Employee Role':
-//                 //get list of employees for choices on who to update
-//                 readEmployees()
-//                 .then(employeeNames => {
-//                     updateRole[0].choices = employeeNames;
-//                     //get list of roles for choices on roles to update
-//                     readRoles()
-//                     .then(roleNames => {
-//                         updateRole[1].choices = roleNames;
-//                         inquirer.prompt(updateRole)
-//                         .then(answers => {
-//                             updateEmployeeRole(answers);
-//                         })
-//                     })
-//                 }) 
-//                 break;
-
-
-//         }
-//     });
-// }
-
-
-
-
-
 
 module.exports = { displayMenu, init };

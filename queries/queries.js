@@ -14,9 +14,10 @@ const pool = new Pool(
 
 pool.connect();
 
+//Query function to view id and name from department
 const viewDepartment = async () => {
         try {
-            const results = await pool.query('SELECT id AS ID, name as Name FROM departments');
+            const results = await pool.query('SELECT id, name FROM departments');
             console.table(results.rows); 
         }
         catch (error) {
@@ -24,56 +25,56 @@ const viewDepartment = async () => {
         }    
     };
 
-const viewRoles = () => {
-    pool.query('SELECT roles.id, roles.title, departments.name as department, roles.salary FROM roles JOIN departments ON roles.department_id = departments.id', (error, results) => {
-        if (error) {
-            console.error('Error executing query', error);
-            return;
-        }
+//Query function to view all roles and the department they belong to
+const viewRoles = async () => {
+    try {
+        const results = await pool.query('SELECT roles.id, roles.title, departments.name as department, roles.salary FROM roles JOIN departments ON roles.department_id = departments.id');
         console.table(results.rows);
-    })
-}
+    }
+    catch (error) {
+        console.error(error);
+    }
+};
 
-const viewEmployees = () => {
-    pool.query(`SELECT e.id, e.first_name, e.last_name, r.title AS role, CONCAT(m.first_name, ' ', m.last_name) AS manager FROM employees e JOIN roles r ON e.role_id = r.id LEFT JOIN employees m ON e.manager_id = m.id;`, (error, results) => {
-        if (error) {
-            console.error('Error executing query', error);
-            return;
-        }
+//query function to view all employees and their managers
+const viewEmployees = async () => {
+    try {
+        const results = await pool.query(`SELECT e.id, e.first_name, e.last_name, r.title AS role, CONCAT(m.first_name, ' ', m.last_name) AS manager FROM employees e JOIN roles r ON e.role_id = r.id LEFT JOIN employees m ON e.manager_id = m.id;`);
         console.table(results.rows);
-    })
-}
+    }
+    catch (error) {
+        console.error(error);
+    }
+};
 
-const addDept = (addDept) => {
-    pool.query(`INSERT INTO departments (name) VALUES ('${addDept}')`, (error, results) => {
-        if (error) {
-            console.error('Error executing query', error);
-            return;
-        }
+//Query function to add a new department
+const addDept = async (addDept) => {
+    try {
+        const results = await pool.query(`INSERT INTO departments (name) VALUES ('${addDept}')`);
         console.log('Department added successfully!');
-    })
-}
+    }
+    catch (error) {
+        console.error('Error executing query', error);
+    }
+};
 
-const createRole = (answers) => {
+//Query function to add a new role
+const createRole = async (answers) => {
     const { roleTitle, roleSalary, roleDept } = answers;
 
-    pool.query(`SELECT id FROM departments WHERE name = '${roleDept}'`, (error, results) => {
-        if (error) {
-            console.error('Error retrieving department id', error);
-            return;
-        }
+    try {
+        //Get ID of department user selected
+        const results = await pool.query(`SELECT id FROM departments WHERE name = '${roleDept}'`);
         const departmentId = results.rows[0].id;
 
-        pool.query(`INSERT INTO roles (title, salary, department_id) VALUES ('${roleTitle}', '${roleSalary}', '${departmentId}')`, (error, results) => {
-            if (error) {
-                console.error('Error executing query', error);
-                return;
-            }
-            console.log('Role added successfully!');
-        })
-    })
-
-}
+        //create role using user selected information
+        const roleResult = await pool.query(`INSERT INTO roles (title, salary, department_id) VALUES ('${roleTitle}', '${roleSalary}', '${departmentId}')`);
+        console.log('Role added successfully!');
+    } 
+    catch (error) {
+        console.error('Error executing query', error);
+    }
+};
 
 const createEmployee = async (answers) => {
     const { firstName, lastName, empRole, empManager } = answers;
@@ -97,22 +98,34 @@ const createEmployee = async (answers) => {
      }
 }
 
-const updateEmployeeRole = (answers) => {
+const updateEmployeeRole = async (answers) => {
     const { chooseEmp, chooseRole } = answers;
 
-        //Finds roleID of chosen role
-        pool.query(`SELECT id FROM roles WHERE title = '${chooseRole}'`, (error, results) => {
-            if (error) {
-                console.error('Error:', error);
-                return;
-            }
-            const roleId = results.rows[0].id;
+    try {
+        //finds roleID of chosen role
+        const idQuery = await pool.query(`SELECT id FROM roles WHERE title = '${chooseRole}'`);
+        const roleId = idQuery.rows[0].id;
 
-            //Updates roleId by name of employee chosen
-            pool.query(`UPDATE employees SET role_id = '${roleId}' WHERE CONCAT(first_name,' ', last_name) = '${chooseEmp}'`);
-            console.log('Employee role updated successfully!');
+        //Updates roleID by name of employee chosen
+        await pool.query(`UPDATE employees SET role_id = '${roleId}' WHERE CONCAT(first_name,' ', last_name) = '${chooseEmp}'`);
+        console.log('Employee role updated successfully!');
+    } catch (error) {
+        console.error('Error:', error);
+    }
+
+        //Finds roleID of chosen role
+        // pool.query(`SELECT id FROM roles WHERE title = '${chooseRole}'`, (error, results) => {
+        //     if (error) {
+        //         console.error('Error:', error);
+        //         return;
+        //     }
+        //     const roleId = results.rows[0].id;
+
+        //     //Updates roleId by name of employee chosen
+        //     pool.query(`UPDATE employees SET role_id = '${roleId}' WHERE CONCAT(first_name,' ', last_name) = '${chooseEmp}'`);
+        //     console.log('Employee role updated successfully!');
             
-        });
+        // });
    
 }
             
