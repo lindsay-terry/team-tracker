@@ -1,6 +1,7 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 const cTable = require('console.table');
+// const { displayMenu } = require('./inquirer');
 
 const pool = new Pool(
     {
@@ -13,15 +14,15 @@ const pool = new Pool(
 
 pool.connect();
 
-const viewDepartment = () => {
-    pool.query('SELECT id AS ID, name as Name FROM departments', (error, results) => {
-        if (error) {
-            console.error('Error executing query', error);
-            return;
+const viewDepartment = async () => {
+        try {
+            const results = await pool.query('SELECT id AS ID, name as Name FROM departments');
+            console.table(results.rows); 
         }
-        console.table(results.rows);
-    })
-};
+        catch (error) {
+            console.error(error);
+        }    
+    };
 
 const viewRoles = () => {
     pool.query('SELECT roles.id, roles.title, departments.name as department, roles.salary FROM roles JOIN departments ON roles.department_id = departments.id', (error, results) => {
