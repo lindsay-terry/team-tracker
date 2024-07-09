@@ -1,5 +1,5 @@
 const inquirer = require('inquirer');
-const { viewDepartment, viewRoles, viewEmployees, addDept , createRole, createEmployee, updateEmployeeRole } = require('./queries');
+const { viewDepartment, viewRoles, viewEmployees, addDept , createRole, createEmployee, updateEmployeeRole, updateManager } = require('./queries');
 const { readDepartments, readRoles, readEmployees } = require('./helpers');
 
 function init() {
@@ -19,7 +19,7 @@ const questions = [
         type: 'list',
         name: 'options',
         message: 'What would you like to do?',
-        choices: ['View All Departments', 'View All Roles', 'View All Employees', 'Add A Department', 'Add A Role', 'Add An Employee', 'Update An Employee Role', 'Cancel'],
+        choices: ['View All Departments', 'View All Roles', 'View All Employees', 'Add A Department', 'Add A Role', 'Add An Employee', 'Update An Employee Role', "Update Employee's Manager", 'Cancel'],
     }
 ]
 
@@ -90,6 +90,21 @@ const updateRole = [
         type: 'list',
         name: 'chooseRole',
         message: 'What role would you like to assign to the selected employee?',
+        choices: [],
+    }
+]
+
+const updateEmpManager = [
+    {
+        type: 'list',
+        name: 'chooseEmp',
+        message: 'Which employee would you like to update?',
+        choices: [],
+    },
+    {
+        type: 'list',
+        name: 'chooseManager',
+        message: 'Who is their new manager?',
         choices: [],
     }
 ]
@@ -165,6 +180,17 @@ function handleChoice(answer) {
                     })
                 })
             })
+        break;
+
+        case "Update Employee's Manager":
+            //get list of employees for choices on who to update and who manager is
+            readEmployees().then(employeeNames => {
+                updateEmpManager[0].choices = employeeNames;
+                updateEmpManager[1].choices = employeeNames;
+                inquirer.prompt(updateEmpManager).then(answers => {
+                    updateManager(answers).then(displayMenu);
+                })
+                })
         break;
 
         case 'Cancel':

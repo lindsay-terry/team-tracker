@@ -1,7 +1,6 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 const cTable = require('console.table');
-// const { displayMenu } = require('./inquirer');
 
 const pool = new Pool(
     {
@@ -76,28 +75,33 @@ const createRole = async (answers) => {
     }
 };
 
+//Query function to create new employee
 const createEmployee = async (answers) => {
     const { firstName, lastName, empRole, empManager } = answers;
 
     try {
+        //get role ID to assign to employee
         const roleQuery = await pool.query(`SELECT id FROM roles WHERE title = '${empRole}'`);
         const roleId = roleQuery.rows[0].id;
 
         if (empManager === 'None') {
+            //insert employee info with no manager
             await pool.query(`INSERT INTO employees (first_name, last_name, role_id) VALUES ('${firstName}', '${lastName}', '${roleId}')`);
             console.log('Employee added successfully!');
         } else {
+            //get ID from manager if there is one
             const managerQuery = await pool.query(`SELECT id FROM employees WHERE CONCAT(first_name,' ', last_name) = '${empManager}'`);
             const managerId = managerQuery.rows[0].id;
-
+            //insert employee data into employees table
             await pool.query(`INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ('${firstName}', '${lastName}', '${roleId}', '${managerId}')`);
             console.log('Employee added successfully!');
         }
      } catch (error) {
         console.error('Error:', error);
      }
-}
+};
 
+//query function to update an employee's role
 const updateEmployeeRole = async (answers) => {
     const { chooseEmp, chooseRole } = answers;
 
@@ -111,24 +115,26 @@ const updateEmployeeRole = async (answers) => {
         console.log('Employee role updated successfully!');
     } catch (error) {
         console.error('Error:', error);
+    }   
+};
+
+//query function to update an employee's manager
+const updateManager = async (answers) => {
+    const {chooseEmp, chooseManager } = answers;
+    
+    try {
+        //get ID of manager
+        const idQuery = await pool.query(`SELECT id FROM employees WHERE CONCAT(first_name,' ', last_name) = '${chooseManager}'`);
+        const managerId = idQuery.rows[0].id;
+
+        //update managerId on employee
+        await pool.query(`UPDATE employees SET manager_id = '${managerId}' WHERE CONCAT(first_name,' ', last_name) = '${chooseEmp}'`);
+        console.log(`Employee manager updated successfully! ${chooseEmp} is now a direct report of ${chooseManager}`);
+    } catch (error) {
+        console.error('Error:', error);
     }
-
-        //Finds roleID of chosen role
-        // pool.query(`SELECT id FROM roles WHERE title = '${chooseRole}'`, (error, results) => {
-        //     if (error) {
-        //         console.error('Error:', error);
-        //         return;
-        //     }
-        //     const roleId = results.rows[0].id;
-
-        //     //Updates roleId by name of employee chosen
-        //     pool.query(`UPDATE employees SET role_id = '${roleId}' WHERE CONCAT(first_name,' ', last_name) = '${chooseEmp}'`);
-        //     console.log('Employee role updated successfully!');
-            
-        // });
-   
-}
+};
             
 
 
-module.exports = { viewDepartment, viewRoles, viewEmployees, addDept, createRole, createEmployee, updateEmployeeRole };
+module.exports = { viewDepartment, viewRoles, viewEmployees, addDept, createRole, createEmployee, updateEmployeeRole, updateManager };
