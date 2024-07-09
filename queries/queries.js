@@ -38,7 +38,7 @@ const viewRoles = async () => {
 //query function to view all employees and their managers
 const viewEmployees = async () => {
     try {
-        const results = await pool.query(`SELECT e.id, e.first_name, e.last_name, r.title AS role, CONCAT(m.first_name, ' ', m.last_name) AS manager FROM employees e JOIN roles r ON e.role_id = r.id LEFT JOIN employees m ON e.manager_id = m.id;`);
+        const results = await pool.query(`SELECT e.id, e.first_name, e.last_name, r.title AS role, d.name as department, r.salary as salary, CONCAT(m.first_name, ' ', m.last_name) AS manager FROM employees e JOIN roles r ON e.role_id = r.id LEFT JOIN employees m ON e.manager_id = m.id RIGHT JOIN departments d ON d.id = r.department_id;`);
         console.table(results.rows);
     }
     catch (error) {
