@@ -28,7 +28,7 @@ After cloning the repository, ensure the following are installed: node.js, postg
 
 * View All Roles: The user can view all the current role data in the database: role id, title of role, department role belongs to, and the salary amounts for each role.
 
-* View All Employees: The user can view all the current employee data in the database.  The employee's id, first and last names, employee's role, and who their manager is. 
+* View All Employees: The user can view all the current employee data in the database.  The employee's id, first and last names, employee's role, department, salary, and who their manager is. 
 
 * Add A Department: Here the user can add a department to the database by following the prompt to input the department name.  The department will be added to the departments table in the database.
 
