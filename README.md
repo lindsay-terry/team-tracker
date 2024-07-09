@@ -20,7 +20,7 @@ Installation instructions for application:
 npm i
 
 ## Usage
-Click [here](https://drive.google.com/file/d/1amVUNilEPgXad8w8VxtaxSCjp-Dep1VH/view) for a video demonstration of the application.
+Click [here](https://drive.google.com/file/d/13VA2yid6jlP8hX1q-mjWfrF8VCdsBLtk/view) for a video demonstration of the application.
 
 After cloning the repository, ensure the following are installed: node.js, postgreSQL, and any dependencies used in the application by running npm i. Create a .env file in the root of the application to enter credentials to connect to postgreSQL to ensure connection to the database.  Log into postgreSQL and run the schema.sql file and seeds.sql to get the database started.  To run the application, enter node server.js in the command line.  The application will start and the user will be given a choice of what actions to take:
 
@@ -42,7 +42,7 @@ After cloning the repository, ensure the following are installed: node.js, postg
 
 * Cancel: Cancel exits the application, clears the console, and takes the user back to the root folder of the application.
 
-![Screenshot of application](./assets/images/team-tracker.png)
+![Screenshot of application](./assets/images/teamtracker.png)
 
 ## License
 This project is operating under the MIT license.  For more detailed information, please click [here](https://opensource.org/license/mit).
