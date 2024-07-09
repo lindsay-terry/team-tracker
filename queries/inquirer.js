@@ -28,7 +28,7 @@ const questions = [
         type: 'list',
         name: 'options',
         message: 'What would you like to do?',
-        choices: ['View All Departments', 'View All Roles', 'View All Employees', 'Add A Department', 'Add A Role', 'Add An Employee', 'Update An Employee Role', "Update Employee's Manager", 'View Employees By Manager', 'View Employees By Department', 'Delete', 'Cancel'],
+        choices: ['View All Departments', 'View All Roles', 'View All Employees', 'Add A Department', 'Add A Role', 'Add An Employee', 'Update An Employee Role', "Update Employee's Manager", 'Cancel'],
     }
 ];
 

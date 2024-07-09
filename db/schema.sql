@@ -1,5 +1,3 @@
-DROP DATABASE IF EXISTS team_tracker_db;
-
 CREATE DATABASE team_tracker_db;
 
 \c team_tracker_db;
