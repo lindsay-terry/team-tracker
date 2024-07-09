@@ -134,7 +134,13 @@ const updateManager = async (answers) => {
         console.error('Error:', error);
     }
 };
-            
 
-
-module.exports = { viewDepartment, viewRoles, viewEmployees, addDept, createRole, createEmployee, updateEmployeeRole, updateManager };
+module.exports = { 
+    viewDepartment, 
+    viewRoles, 
+    viewEmployees, 
+    addDept, 
+    createRole, 
+    createEmployee, 
+    updateEmployeeRole, 
+    updateManager };

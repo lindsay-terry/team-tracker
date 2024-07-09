@@ -1,7 +1,16 @@
 const inquirer = require('inquirer');
-const { viewDepartment, viewRoles, viewEmployees, addDept , createRole, createEmployee, updateEmployeeRole, updateManager } = require('./queries');
 const { readDepartments, readRoles, readEmployees } = require('./helpers');
+const { 
+    viewDepartment, 
+    viewRoles, 
+    viewEmployees, 
+    addDept , 
+    createRole, 
+    createEmployee, 
+    updateEmployeeRole, 
+    updateManager } = require('./queries');
 
+//function to display application image
 function init() {
     console.clear();
     console.log(`.--------------------------------------------------------------.`);
@@ -11,7 +20,7 @@ function init() {
     console.log("|  | |  __/ (_| | | | | | |   | || | | (_| | (__|   <  __/ |   |");
     console.log(`|  |_|\\___|\\__,_|_| |_| |_|   |_||_|  \\__,_|\\___|_|\\_\\___|_|   |`);
     console.log("'--------------------------------------------------------------'");
-}
+};
 
 //All the questions based on starting app and user selection
 const questions = [
@@ -19,9 +28,9 @@ const questions = [
         type: 'list',
         name: 'options',
         message: 'What would you like to do?',
-        choices: ['View All Departments', 'View All Roles', 'View All Employees', 'Add A Department', 'Add A Role', 'Add An Employee', 'Update An Employee Role', "Update Employee's Manager", 'Cancel'],
+        choices: ['View All Departments', 'View All Roles', 'View All Employees', 'Add A Department', 'Add A Role', 'Add An Employee', 'Update An Employee Role', "Update Employee's Manager", 'View Employees By Manager', 'View Employees By Department', 'Delete', 'Cancel'],
     }
-]
+];
 
 //Prompt for adding department name
 const addDepartment = [
@@ -30,7 +39,7 @@ const addDepartment = [
         name: 'addDept',
         message: 'Please enter department name:',
     }
-]
+];
 
 //Prompt for adding new role information
 const addRole = [
@@ -50,7 +59,7 @@ const addRole = [
         message: 'What department does this role belong to?',
         choices: [],
     }
-]
+];
 
 //Prompt for adding new employee information
 const addEmployee = [
@@ -76,7 +85,7 @@ const addEmployee = [
         message: "Who is the employee's manager?",
         choices: [],
     }
-]
+];
 
 //Prompt to update role
 const updateRole = [
@@ -92,8 +101,9 @@ const updateRole = [
         message: 'What role would you like to assign to the selected employee?',
         choices: [],
     }
-]
+];
 
+//prompt to update manager
 const updateEmpManager = [
     {
         type: 'list',
@@ -107,16 +117,18 @@ const updateEmpManager = [
         message: 'Who is their new manager?',
         choices: [],
     }
-]
+];
 
+//function to display menu options and call function to handle the choices
 function displayMenu() {
     inquirer.prompt(questions)
     .then((answer) => {
         handleChoice(answer);
     });
     
-}
+};
 
+//function to handle user choices
 function handleChoice(answer) {
     let choice = answer.options;
     console.clear();
@@ -197,9 +209,7 @@ function handleChoice(answer) {
             //clears console and exits application
             console.clear();
             process.exit();
-        break;
-
-            
+        break;      
     }
 
 }
